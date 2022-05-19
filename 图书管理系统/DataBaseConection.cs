@@ -310,11 +310,18 @@ namespace 图书管理系统
         public void bookDelete(string name)
         {
             string bookDeleteCommand = "delete from booksinfo where 书名='" + name + "'";
+            string foreign_key_checks_false = "SET foreign_key_checks = 0;";
+            string foreign_key_checks = "SET foreign_key_checks = 1;";
             using (MySqlConnection bookDeleteConnection = new MySqlConnection(connectionString))
             {
                 bookDeleteConnection.Open();
-                MySqlCommand mySqlCommand = new MySqlCommand(bookDeleteCommand,bookDeleteConnection);
+                MySqlCommand mySqlCommand = new MySqlCommand(bookDeleteCommand, bookDeleteConnection);
+                MySqlCommand foreign_key_checks_falseCommand = new MySqlCommand(foreign_key_checks_false, bookDeleteConnection);
+                MySqlCommand foreign_key_checksCommand = new MySqlCommand(foreign_key_checks, bookDeleteConnection);
+                foreign_key_checks_falseCommand.ExecuteNonQuery();
                 mySqlCommand.ExecuteNonQuery();
+                foreign_key_checksCommand.ExecuteNonQuery();
+                bookDeleteConnection.Close();
             }
         }
         
@@ -590,6 +597,23 @@ namespace 图书管理系统
 
             return IsborrowAdd;
         }
-      
+        public DataTable seekLoginData(string userClass, string value)
+        {
+            string seekLoginDataByClassCommandText = "select * from loginrecord " +
+                "where " + userClass + "='" + value + "'";
+
+
+            DataTable seekUsers;
+
+            using (MySqlConnection seekLoginDataConnection = new MySqlConnection(connectionString))
+            {
+                MySqlDataAdapter mySqlDataAdapter = new MySqlDataAdapter(seekLoginDataByClassCommandText, seekLoginDataConnection);
+                DataTable dataTable = new DataTable();
+                mySqlDataAdapter.Fill(dataTable);
+                seekUsers = dataTable;
+            }
+            return seekUsers;
+        }
+
     }
 }

@@ -39,5 +39,10 @@ namespace 图书管理系统
             this.Hide();
             booksManage.Show();
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
